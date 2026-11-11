@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mascotas</title>
+</head>
+<body>
+<h1>Listado de mascotas</h1>
+
+<p>
+    <a th:href="@{/mascotas/nueva}">Registrar nueva mascota</a>
+</p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Especie</th>
+        <th>Género</th>
+        <th>Edad</th>
+        <th>Descripción</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="m : ${mascotas}">
+        <td th:text="${m.id}">1</td>
+        <td th:text="${m.nombre}">Firulais</td>
+        <td th:text="${m.especie}">PERRO</td>
+        <td th:text="${m.genero}">MACHO</td>
+        <td th:text="${m.edad}">3</td>
+        <td th:text="${m.descripcion}">-</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(mascotas)}">
+        <td colspan="6">No hay mascotas registradas.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Nueva mascota</title>
 </head>
 <body>
+<h1>Registrar nueva mascota</h1>
 
+<form th:action="@{/mascotas}" method="post">
+    <p>
+        <label>Nombre: <input type="text" name="nombre" required/></label>
+    </p>
+    <p>
+        <label>Especie:
+            <select name="especie" required>
+                <option th:each="e : ${especies}" th:value="${e}" th:text="${e}"></option>
+            </select>
+        </label>
+    </p>
+    <p>
+        <label>Género:
+            <select name="genero" required>
+                <option th:each="g : ${generos}" th:value="${g}" th:text="${g}"></option>
+            </select>
+        </label>
+    </p>
+    <p>
+        <label>Edad: <input type="number" name="edad" min="0" max="30"/></label>
+    </p>
+    <p>
+        <label>Foto URL: <input type="text" name="fotoUrl"/></label>
+    </p>
+    <p>
+        <label>Descripción: <textarea name="descripcion" rows="3" cols="40"></textarea></label>
+    </p>
+    <p>
+        <button type="submit">Guardar</button>
+        <a th:href="@{/mascotas}">Cancelar</a>
+    </p>
+</form>
 </body>
 </html>

@@ -1,0 +1,24 @@
+# Maven
+target/
+*.jar.original
+
+# Spring Boot deploy simulado
+deploy/
+data/
+*.log
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# H2 (por las dudas)
+*.db
+*.mv.db
+*.trace.db
