@@ -1,40 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mascotas</title>
+    <title>Mascotas en Adopción</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Listado de mascotas</h1>
+<body class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>🐾 Mascotas en Adopción</h1>
+        <a th:href="@{/mascotas/nueva}" class="btn btn-primary">Registrar Mascota</a>
+    </div>
 
-<p>
-    <a th:href="@{/mascotas/nueva}">Registrar nueva mascota</a>
-</p>
-
-<table border="1" cellpadding="6" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Especie</th>
-        <th>Género</th>
-        <th>Edad</th>
-        <th>Descripción</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="m : ${mascotas}">
-        <td th:text="${m.id}">1</td>
-        <td th:text="${m.nombre}">Firulais</td>
-        <td th:text="${m.especie}">PERRO</td>
-        <td th:text="${m.genero}">MACHO</td>
-        <td th:text="${m.edad}">3</td>
-        <td th:text="${m.descripcion}">-</td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(mascotas)}">
-        <td colspan="6">No hay mascotas registradas.</td>
-    </tr>
-    </tbody>
-</table>
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Especie</th>
+                <th>Género</th>
+                <th>Edad</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Si no hay mascotas, mostramos un mensaje -->
+            <tr th:if="${#lists.isEmpty(mascotas)}">
+                <td colspan="5" class="text-center text-muted">No hay mascotas registradas aún.</td>
+            </tr>
+            <!-- Iteramos sobre la lista de mascotas -->
+            <tr th:each="m : ${mascotas}">
+                <td th:text="${m.nombre}"></td>
+                <td th:text="${m.especie}"></td>
+                <td th:text="${m.genero}"></td>
+                <td th:text="${m.edad}"></td>
+                <td th:text="${m.descripcion}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
