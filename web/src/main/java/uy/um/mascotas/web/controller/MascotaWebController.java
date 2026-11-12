@@ -19,8 +19,9 @@ public class MascotaWebController {
     }
 
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("mascotas", service.listar(null, null, null, null));
+    public String listar(@RequestParam(required = false) Especie especie, Model model) {
+        // Le pasamos el filtro al service. Si especie es null, trae todas.
+        model.addAttribute("mascotas", service.listar(especie, null, null, null));
         return "mascotas/list";
     }
 
