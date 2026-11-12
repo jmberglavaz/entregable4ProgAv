@@ -46,16 +46,13 @@ pipeline {
         stage('Deploy simulado') {
             steps {
                 sh '''
-                    # Matar la app anterior (ahora sí con el patrón correcto)
                     pkill -f 'deploy/app.jar' || true
-                    pkill -f 'server.port=8081' || true
                     sleep 1
-
                     mkdir -p deploy
                     cp web/target/mascotas-web-*.jar deploy/app.jar
-
-                    # JENKINS_NODE_COOKIE evita que Jenkins mate el proceso al terminar el build
-                    JENKINS_NODE_COOKIE=dontKillMe nohup java -jar deploy/app.jar --server.port=8081 > deploy/app.log 2>&1 &
+                    
+                    # setsid evade el ProcessTreeKiller de Jenkins
+                    setsid java -jar deploy/app.jar --server.port=8081 --server.address=0.0.0.0 > deploy/app.log 2>&1 < /dev/null &
                 '''
             }
         }
