@@ -11,9 +11,25 @@
         <a th:href="@{/mascotas/nueva}" class="btn btn-primary">Registrar Mascota</a>
     </div>
 
-    <table class="table table-striped table-hover shadow-sm">
+    <!-- FILTRO RÁPIDO -->
+    <form action="/mascotas" method="get" class="row g-3 mb-4 bg-light p-3 rounded shadow-sm">
+        <div class="col-auto">
+            <select name="especie" class="form-select">
+                <option value="">Todas las especies</option>
+                <option value="PERRO">Perro</option>
+                <option value="GATO">Gato</option>
+                <option value="OTRO">Otro</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-secondary">Filtrar</button>
+        </div>
+    </form>
+
+    <table class="table table-striped table-hover shadow-sm align-middle">
         <thead class="table-dark">
             <tr>
+                <th>Foto</th>
                 <th>Nombre</th>
                 <th>Especie</th>
                 <th>Género</th>
@@ -22,12 +38,15 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Si no hay mascotas, mostramos un mensaje -->
             <tr th:if="${#lists.isEmpty(mascotas)}">
-                <td colspan="5" class="text-center text-muted">No hay mascotas registradas aún.</td>
+                <td colspan="6" class="text-center text-muted">No hay mascotas registradas.</td>
             </tr>
-            <!-- Iteramos sobre la lista de mascotas -->
             <tr th:each="m : ${mascotas}">
+                <td>
+                    <!-- Muestra la foto si existe, sino un placeholder -->
+                    <img th:if="${m.fotoUrl != null and !m.fotoUrl.isEmpty()}" th:src="${m.fotoUrl}" alt="Foto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                    <span th:if="${m.fotoUrl == null or m.fotoUrl.isEmpty()}" class="text-muted">Sin foto</span>
+                </td>
                 <td th:text="${m.nombre}"></td>
                 <td th:text="${m.especie}"></td>
                 <td th:text="${m.genero}"></td>
