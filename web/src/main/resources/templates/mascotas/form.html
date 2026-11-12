@@ -4,52 +4,124 @@
     <meta charset="UTF-8">
     <title>Registrar Nueva Mascota</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sapphire: #72B0AB;
+            --arctic: #BCDDDC;
+            --lace: #FFEDD1;
+            --bubblegum: #FDC1B4;
+            --ballet-slipper: #FE9179;
+            --navy: #0f172a;
+        }
+        body {
+            background-color: var(--arctic);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-custom {
+            background-color: var(--navy);
+            padding: 1rem;
+            border-bottom: 4px solid var(--ballet-slipper);
+        }
+        .card-form {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card-header-custom {
+            background-color: var(--sapphire);
+            color: white;
+            padding: 1.5rem;
+            border-bottom: none;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--sapphire);
+            box-shadow: 0 0 0 0.25rem rgba(114, 176, 171, 0.25);
+        }
+        .btn-save {
+            background-color: var(--ballet-slipper);
+            color: white;
+            font-weight: bold;
+            border: none;
+        }
+        .btn-save:hover {
+            background-color: #e57f68;
+            color: white;
+        }
+        .btn-cancel {
+            background-color: var(--bubblegum);
+            color: var(--navy);
+            font-weight: bold;
+        }
+        .btn-cancel:hover {
+            background-color: #f0a698;
+            color: var(--navy);
+        }
+    </style>
 </head>
-<body class="container mt-5">
-    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Registrar Nueva Mascota</h3>
-        </div>
-        <div class="card-body">
-            <form th:action="@{/mascotas}" method="post">
-                <div class="mb-3">
-                    <label class="form-label">Nombre:</label>
-                    <input type="text" name="nombre" class="form-control" required>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
-                        <label class="form-label">Especie:</label>
-                        <select name="especie" class="form-select" required>
-                            <option value="" disabled selected>Seleccione...</option>
-                            <option th:each="e : ${especies}" th:value="${e}" th:text="${e}"></option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <label class="form-label">Género:</label>
-                        <select name="genero" class="form-select" required>
-                            <option value="" disabled selected>Seleccione...</option>
-                            <option th:each="g : ${generos}" th:value="${g}" th:text="${g}"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Edad (años):</label>
-                    <input type="number" name="edad" class="form-control" min="0" max="30">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">URL de la Foto (opcional):</label>
-                    <input type="url" name="fotoUrl" class="form-control" placeholder="https://...">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Descripción:</label>
-                    <textarea name="descripcion" class="form-control" rows="3"></textarea>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <a th:href="@{/mascotas}" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-success">Guardar Mascota</button>
-                </div>
-            </form>
+<body>
+
+    <div class="navbar-custom mb-5">
+        <div class="container d-flex align-items-center">
+            <img src="/logo.png" alt="Logo" style="height: 50px; margin-right: 15px;">
+            <h3 class="text-white m-0">Registrar Mascota</h3>
         </div>
     </div>
+
+    <div class="container mb-5">
+        <div class="card card-form mx-auto" style="max-width: 700px;">
+            <div class="card-header-custom">
+                <h4 class="mb-0">Datos de la mascota</h4>
+            </div>
+            <div class="card-body p-4 bg-white">
+                <form th:action="@{/mascotas}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nombre:</label>
+                        <input type="text" name="nombre" class="form-control form-control-lg" required placeholder="Ej. Firulais">
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Especie:</label>
+                            <select name="especie" class="form-select form-select-lg" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <option th:each="e : ${especies}" th:value="${e}" th:text="${e}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Género:</label>
+                            <select name="genero" class="form-select form-select-lg" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <option th:each="g : ${generos}" th:value="${g}" th:text="${g}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Edad (años):</label>
+                            <input type="number" name="edad" class="form-control form-control-lg" min="0" max="30" placeholder="Ej. 3">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold">URL de la Foto (opcional):</label>
+                            <input type="url" name="fotoUrl" class="form-control form-control-lg" placeholder="https://ejemplo.com/foto.jpg">
+                            <div class="form-text text-muted small mt-1">Si se deja vacío, se mostrará el logo de la página.</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Descripción:</label>
+                        <textarea name="descripcion" class="form-control" rows="3" placeholder="Cuéntanos un poco sobre su personalidad..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between pt-3 border-top">
+                        <a th:href="@{/mascotas}" class="btn btn-cancel btn-lg px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-save btn-lg px-4">Guardar Mascota 🐾</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

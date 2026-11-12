@@ -4,56 +4,187 @@
     <meta charset="UTF-8">
     <title>Mascotas en Adopción</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sapphire: #72B0AB;
+            --arctic: #BCDDDC;
+            --lace: #FFEDD1;
+            --bubblegum: #FDC1B4;
+            --ballet-slipper: #FE9179;
+            --navy: #0f172a;
+        }
+        body {
+            background-color: var(--arctic);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-custom {
+            background-color: var(--navy);
+            padding: 1rem;
+            border-bottom: 4px solid var(--ballet-slipper);
+        }
+        .navbar-custom h1 {
+            color: var(--lace);
+            font-weight: bold;
+            margin: 0;
+        }
+        .card-mascota {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        .card-mascota:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        /* Imagen principal de la tarjeta */
+        .card-img-container {
+            height: 250px;
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--lace);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-img-container img.foto-real {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+        .card-img-container img.foto-default {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            opacity: 0.4;
+        }
+        .badge-especie {
+            background-color: var(--sapphire);
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5em 1em;
+            border-radius: 20px;
+        }
+        .badge-genero {
+            background-color: var(--bubblegum);
+            color: var(--navy);
+            font-size: 0.9rem;
+            padding: 0.5em 1em;
+            border-radius: 20px;
+        }
+        .btn-primary-custom {
+            background-color: var(--ballet-slipper);
+            color: white;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary-custom:hover {
+            background-color: #e57f68;
+            color: white;
+        }
+        .btn-outline-custom {
+            color: var(--navy);
+            border-color: var(--navy);
+            font-weight: bold;
+        }
+        .btn-outline-custom:hover {
+            background-color: var(--navy);
+            color: white;
+        }
+        .filter-section {
+            background-color: var(--lace);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
 </head>
-<body class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>🐾 Mascotas en Adopción</h1>
-        <a th:href="@{/mascotas/nueva}" class="btn btn-primary">Registrar Mascota</a>
+<body>
+
+    <!-- Barra superior con logo y botón -->
+    <div class="navbar-custom mb-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="/logo.png" alt="Logo" style="height: 50px; margin-right: 15px;">
+                <h1>Mascotas en Adopción</h1>
+            </div>
+            <a th:href="@{/mascotas/nueva}" class="btn btn-primary-custom btn-lg shadow">+ Registrar Mascota</a>
+        </div>
     </div>
 
-    <!-- FILTRO RÁPIDO -->
-    <form action="/mascotas" method="get" class="row g-3 mb-4 bg-light p-3 rounded shadow-sm">
-        <div class="col-auto">
-            <select name="especie" class="form-select">
-                <option value="">Todas las especies</option>
-                <option value="PERRO">Perro</option>
-                <option value="GATO">Gato</option>
-                <option value="OTRO">Otro</option>
-            </select>
+    <div class="container mb-5">
+        <!-- FILTROS COMPLETOS -->
+        <div class="filter-section">
+            <form action="/mascotas" method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-dark">Especie</label>
+                    <select name="especie" class="form-select">
+                        <option value="">Todas</option>
+                        <option value="PERRO" th:selected="${especieSel?.name() == 'PERRO'}">Perro</option>
+                        <option value="GATO" th:selected="${especieSel?.name() == 'GATO'}">Gato</option>
+                        <option value="OTRO" th:selected="${especieSel?.name() == 'OTRO'}">Otro</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-dark">Género</label>
+                    <select name="genero" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="MACHO" th:selected="${generoSel?.name() == 'MACHO'}">Macho</option>
+                        <option value="HEMBRA" th:selected="${generoSel?.name() == 'HEMBRA'}">Hembra</option>
+                        <option value="DESCONOCIDO" th:selected="${generoSel?.name() == 'DESCONOCIDO'}">Desconocido</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold text-dark">Edad Mín.</label>
+                    <input type="number" name="edadMin" class="form-control" placeholder="0" th:value="${edadMinSel}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold text-dark">Edad Máx.</label>
+                    <input type="number" name="edadMax" class="form-control" placeholder="30" th:value="${edadMaxSel}">
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary-custom w-100">Filtrar</button>
+                    <a href="/mascotas" class="btn btn-outline-custom w-100" title="Limpiar Filtros">Limpiar</a>
+                </div>
+            </form>
         </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-outline-secondary">Filtrar</button>
-        </div>
-    </form>
 
-    <table class="table table-striped table-hover shadow-sm align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Foto</th>
-                <th>Nombre</th>
-                <th>Especie</th>
-                <th>Género</th>
-                <th>Edad</th>
-                <th>Descripción</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:if="${#lists.isEmpty(mascotas)}">
-                <td colspan="6" class="text-center text-muted">No hay mascotas registradas.</td>
-            </tr>
-            <tr th:each="m : ${mascotas}">
-                <td>
-                    <!-- Muestra la foto si existe, sino un placeholder -->
-                    <img th:if="${m.fotoUrl != null and !m.fotoUrl.isEmpty()}" th:src="${m.fotoUrl}" alt="Foto" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                    <span th:if="${m.fotoUrl == null or m.fotoUrl.isEmpty()}" class="text-muted">Sin foto</span>
-                </td>
-                <td th:text="${m.nombre}"></td>
-                <td th:text="${m.especie}"></td>
-                <td th:text="${m.genero}"></td>
-                <td th:text="${m.edad}"></td>
-                <td th:text="${m.descripcion}"></td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- ALERTA SI NO HAY RESULTADOS -->
+        <div th:if="${#lists.isEmpty(mascotas)}" class="text-center mt-5">
+            <h3 class="text-muted">No se encontraron mascotas con esos filtros. 🐾</h3>
+        </div>
+
+        <!-- GRILLA DE TARJETAS -->
+        <div class="row g-4">
+            <div class="col-md-4 col-lg-3" th:each="m : ${mascotas}">
+                <div class="card card-mascota h-100">
+                    
+                    <!-- Lógica de Imagen: Foto real o Logo por defecto -->
+                    <div class="card-img-container">
+                        <img th:if="${m.fotoUrl != null and !m.fotoUrl.isEmpty()}" th:src="${m.fotoUrl}" class="foto-real" alt="Foto de mascota">
+                        <img th:if="${m.fotoUrl == null or m.fotoUrl.isEmpty()}" src="/logo.png" class="foto-default" alt="Logo por defecto">
+                    </div>
+
+                    <div class="card-body">
+                        <h4 class="card-title fw-bold text-dark mb-3" th:text="${m.nombre}">Nombre</h4>
+                        
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge badge-especie" th:text="${m.especie}">Especie</span>
+                            <span class="badge badge-genero" th:text="${m.genero}">Género</span>
+                        </div>
+                        
+                        <p class="card-text text-secondary mb-1">
+                            <strong>Edad:</strong> <span th:text="${m.edad != null ? m.edad + ' años' : 'No especificada'}"></span>
+                        </p>
+                        <p class="card-text text-muted small" th:text="${m.descripcion}">Descripción...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
