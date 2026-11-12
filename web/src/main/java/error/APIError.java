@@ -1,4 +1,4 @@
-package uy.um.mascotas.web.error;
+package error;
 
 import java.time.Instant;
 

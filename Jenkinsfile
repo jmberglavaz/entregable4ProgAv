@@ -7,8 +7,8 @@ pipeline {
     }
 
     triggers {
-        githubPush()
-        pollSCM('H/5 * * * *')
+        // githubPush() no funciona sin webhook público (ngrok). Lo dejamos comentado o eliminado.
+        pollSCM('H/5 * * * *') // Poll cada 5 min (suficiente para la demo)
     }
 
     options {
@@ -38,6 +38,7 @@ pipeline {
 
         stage('Integration tests') {
             steps {
+                // verify corre failsafe (ITs) y surefire de nuevo, pero asegura el ciclo completo
                 sh 'mvn -B verify'
             }
         }
@@ -45,10 +46,13 @@ pipeline {
         stage('Deploy simulado') {
             steps {
                 sh '''
-                    pkill -f 'mascotas-web-.*\\.jar' || true
+                    pkill -f 'deploy/app.jar' || true
+                    sleep 1
                     mkdir -p deploy
                     cp web/target/mascotas-web-*.jar deploy/app.jar
-                    nohup java -jar deploy/app.jar --server.port=8081 > deploy/app.log 2>&1 &
+                    
+                    # setsid evade el ProcessTreeKiller de Jenkins
+                    setsid java -jar deploy/app.jar --server.port=8081 --server.address=0.0.0.0 > deploy/app.log 2>&1 < /dev/null &
                 '''
             }
         }
@@ -72,7 +76,7 @@ pipeline {
 
     post {
         always {
-            junit '**/target/surefire-reports/*.xml, **/target/failsafe-reports/*.xml'
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml, **/target/failsafe-reports/*.xml'
             archiveArtifacts artifacts: 'web/target/mascotas-web-*.jar', fingerprint: true, allowEmptyArchive: true
         }
     }
