@@ -1,8 +1,6 @@
 package uy.um.mascotas.core.domain;
 
 import jakarta.persistence.*;
-import uy.um.mascotas.core.domain.Especie;
-import uy.um.mascotas.core.domain.Genero;
 
 import java.util.Objects;
 

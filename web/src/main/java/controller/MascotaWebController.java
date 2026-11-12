@@ -1,4 +1,4 @@
-package uy.um.mascotas.web.controller;
+package controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +20,7 @@ public class MascotaWebController {
 
     @GetMapping
     public String listar(Model model) {
-        // TODO Persona B
-        model.addAttribute("mascotas", java.util.List.of());
+        model.addAttribute("mascotas", service.listar(null, null, null, null));
         return "mascotas/list";
     }
 
@@ -34,7 +33,7 @@ public class MascotaWebController {
 
     @PostMapping
     public String crear(@ModelAttribute CrearMascotaRequest request) {
-        // TODO Persona B
+        service.crear(request);
         return "redirect:/mascotas";
     }
 }

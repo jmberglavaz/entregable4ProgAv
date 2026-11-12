@@ -1,4 +1,4 @@
-package uy.um.mascotas.web.mapper;
+package mapper;
 
 import uy.um.mascotas.core.domain.Mascota;
 import uy.um.mascotas.core.dto.CrearMascotaRequest;
