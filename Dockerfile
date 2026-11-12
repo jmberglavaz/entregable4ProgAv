@@ -6,7 +6,7 @@ USER root
 
 # Instalamos Maven y procps
 RUN apt-get update && \
-    apt-get install -y maven procps && \
+    apt-get install -y maven procps curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Volvemos al usuario jenkins para que el contenedor corra seguro
