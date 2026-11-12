@@ -1,4 +1,4 @@
-package controller;
+package uy.um.mascotas.web.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
