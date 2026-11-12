@@ -7,8 +7,8 @@ pipeline {
     }
 
     triggers {
-        githubPush()
-        pollSCM('H/5 * * * *')
+        // githubPush() no funciona sin webhook público (ngrok). Lo dejamos comentado o eliminado.
+        pollSCM('H/5 * * * *') // Poll cada 5 min (suficiente para la demo)
     }
 
     options {
@@ -38,6 +38,7 @@ pipeline {
 
         stage('Integration tests') {
             steps {
+                // verify corre failsafe (ITs) y surefire de nuevo, pero asegura el ciclo completo
                 sh 'mvn -B verify'
             }
         }
@@ -45,10 +46,16 @@ pipeline {
         stage('Deploy simulado') {
             steps {
                 sh '''
-                    pkill -f 'mascotas-web-.*\\.jar' || true
+                    # Matar la app anterior (ahora sí con el patrón correcto)
+                    pkill -f 'deploy/app.jar' || true
+                    pkill -f 'server.port=8081' || true
+                    sleep 1
+
                     mkdir -p deploy
                     cp web/target/mascotas-web-*.jar deploy/app.jar
-                    nohup java -jar deploy/app.jar --server.port=8081 > deploy/app.log 2>&1 &
+
+                    # JENKINS_NODE_COOKIE evita que Jenkins mate el proceso al terminar el build
+                    JENKINS_NODE_COOKIE=dontKillMe nohup java -jar deploy/app.jar --server.port=8081 > deploy/app.log 2>&1 &
                 '''
             }
         }
@@ -56,12 +63,16 @@ pipeline {
         stage('Smoke test') {
             steps {
                 sh '''
+                    # host.docker.internal apunta a la Mac host desde dentro del contenedor
+                    SMOKE_URL="http://host.docker.internal:8081/actuator/health"
+
                     for i in $(seq 1 30); do
-                        if curl -fsS http://localhost:8081/actuator/health; then
+                        if curl -fsS "$SMOKE_URL"; then
                             exit 0
                         fi
                         sleep 1
                     done
+
                     echo '--- app.log ---'
                     cat deploy/app.log || true
                     exit 1
@@ -72,7 +83,7 @@ pipeline {
 
     post {
         always {
-            junit '**/target/surefire-reports/*.xml, **/target/failsafe-reports/*.xml'
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml, **/target/failsafe-reports/*.xml'
             archiveArtifacts artifacts: 'web/target/mascotas-web-*.jar', fingerprint: true, allowEmptyArchive: true
         }
     }
