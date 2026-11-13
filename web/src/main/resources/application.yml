@@ -1,6 +1,9 @@
 spring:
   application:
     name: mascotas-web
+  
+  thymeleaf:
+    cache: false
 
   datasource:
     url: jdbc:h2:file:./data/mascotas;AUTO_SERVER=TRUE
