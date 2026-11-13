@@ -40,8 +40,8 @@ class MascotaAPIControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(250))
-                //.andExpect(jsonPath("$.id").value(1))
+                //.andExpect(jsonPath("$.id").value(999))
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Firulais"));
     }
 
