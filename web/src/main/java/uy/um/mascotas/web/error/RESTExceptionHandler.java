@@ -1,4 +1,4 @@
-package error;
+package uy.um.mascotas.web.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
